@@ -151,33 +151,33 @@ void updatePhysicalButtonState() {
 /*
  * thingSpeak:  data is an array of character strings to fill in for field1, field2, ...
  *              numfields is the number of items in data
+ *              
+ *              ThingSpeak can only be updated every 15s
  */
 void thingSpeak(char *data[], int numfields) {
+/* These strings are for the ThingSpeak Channel API (posting data to a channel) */
+    const char *postString = // ~ 155 characters 
+        "POST /update HTTP/1.1\r\n"
+        "Host: api.thingspeak.com\r\n"
+        "Connection: close\r\n"
+        "X-THINGSPEAKAPIKEY: %s\r\n"
+        "Content-Type: application/x-www-form-urlencoded\r\n"
+        "Content-Length: %d\r\n"
+        "\r\n"
+        "%s\r\n";
   char buffer[250];
   char fields[250];
-
-  /* This string is for the ThingSpeak Channel API (posting data to a channel) */
-  const char *postString = // ~ 155 characters 
-      "POST /update HTTP/1.1\r\n"
-      "Host: api.thingspeak.com\r\n"
-      "Connection: close\r\n"
-      "X-THINGSPEAKAPIKEY: %s\r\n"
-      "Content-Type: application/x-www-form-urlencoded\r\n"
-      "Content-Length: %d\r\n"
-      "\r\n"
-      "%s\r\n";
-
   if(!client.connected()) {
-    if (client.connect("thingspeak.com", 80)) {
-      Serial.println("connected");
-
+    uint8_t connectStatus = client.connect("thingspeak.com", 80);
+    if(connectStatus == 1) {
       fields[0] = 0;
       int offset = 0;
       for(int i=0;i<numfields;i++) {
         offset += sprintf(fields+offset, "field%d=%s%s",i+1, data[i], i<numfields-1?"&":"");  
       }
-      sprintf(buffer, postString, apiKey, offset, fields);
-      client.println(buffer);
+      sprintf(buffer, postString, apiKey, offset+2, fields);
+      client.write((uint8_t*)buffer, strlen(buffer));
+      client.stop();
     }
   }  
 }
