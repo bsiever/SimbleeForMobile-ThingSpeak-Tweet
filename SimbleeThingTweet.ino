@@ -146,25 +146,7 @@ void updatePhysicalButtonState() {
 
 // ***** ThingSpeak data delivery functions & Data
 
-const char *tweetString = "POST /apps/thingtweet/1/statuses/update HTTP/1.1\r\n"
-    "Host: api.thingspeak.com\r\n"
-    "Connection: close\r\n"
-    "Content-Type: application/x-www-form-urlencoded\r\n"
-    "Content-Length: %d\r\n"
-    "\r\n"
-    "%s\r\n";
-const char *tweetData = "api_key=%s&status=%s";  // 16+len(API)+len(status) = 16+16+140 = 172
 
-/* These strings are for the ThingSpeak Channel API (posting data to a channel) */
-const char *postString = // ~ 155 characters 
-    "POST /update HTTP/1.1\r\n"
-    "Host: api.thingspeak.com\r\n"
-    "Connection: close\r\n"
-    "X-THINGSPEAKAPIKEY: %s\r\n"
-    "Content-Type: application/x-www-form-urlencoded\r\n"
-    "Content-Length: %d\r\n"
-    "\r\n"
-    "%s\r\n";
 
 /*
  * thingSpeak:  data is an array of character strings to fill in for field1, field2, ...
@@ -173,6 +155,18 @@ const char *postString = // ~ 155 characters
 void thingSpeak(char *data[], int numfields) {
   char buffer[250];
   char fields[250];
+
+  /* This string is for the ThingSpeak Channel API (posting data to a channel) */
+  const char *postString = // ~ 155 characters 
+      "POST /update HTTP/1.1\r\n"
+      "Host: api.thingspeak.com\r\n"
+      "Connection: close\r\n"
+      "X-THINGSPEAKAPIKEY: %s\r\n"
+      "Content-Type: application/x-www-form-urlencoded\r\n"
+      "Content-Length: %d\r\n"
+      "\r\n"
+      "%s\r\n";
+
   if(!client.connected()) {
     if (client.connect("thingspeak.com", 80)) {
       Serial.println("connected");
@@ -192,6 +186,14 @@ void thingSpeak(char *data[], int numfields) {
  * thingTweet:  message is the message to tweet (<=120 characters)
  */
 void thingTweet(char *message) {
+  const char *tweetString = "POST /apps/thingtweet/1/statuses/update HTTP/1.1\r\n"
+      "Host: api.thingspeak.com\r\n"
+      "Connection: close\r\n"
+      "Content-Type: application/x-www-form-urlencoded\r\n"
+      "Content-Length: %d\r\n"
+      "\r\n"
+      "%s\r\n";
+  const char *tweetData = "api_key=%s&status=%s";  // 16+len(API)+len(status) = 16+16+140 = 172
   char tweetLine[166]; // 10 (key) + 16 (setup text) + 140 (tweet)
   char buffer2[325]; // >=155+166
   if(!client.connected()) {
