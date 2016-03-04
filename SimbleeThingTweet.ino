@@ -11,6 +11,8 @@
  *    Open the Simblee app on a mobile device.  While connected to the Simblee
  *    either the "Tweet" on the Mobile device or Button B on the Simblee will 
  *    send a tweet.
+ *
+ *    See: https://github.com/bsiever/SimbleeForMobile-ThingSpeak-Tweet
  */ 
 
 #include "SimbleeForMobile.h"
