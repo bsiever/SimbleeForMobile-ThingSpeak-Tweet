@@ -8,7 +8,7 @@
  *    Link to Twitter and get a Tweet Key (https://thingspeak.com/apps/thingtweets)
  *    Update the tweetKey variable below to include the ThingSpeek Twitter API Key 
  *    
- *    Open the Simblee app on a mobile device.  While connect to the Simblee
+ *    Open the Simblee app on a mobile device.  While connected to the Simblee
  *    either the "Tweet" on the Mobile device or Button B on the Simblee will 
  *    send a tweet.
  */ 
